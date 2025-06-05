@@ -13,39 +13,25 @@ jobs:
       
     - name: Clone Target Repo
       run: |
-        git clone https://github.com/dw-dengwei/daily-arXiv-ai-enhanced.git target_repo
+        git clone --depth=1 https://github.com/dw-dengwei/daily-arXiv-ai-enhanced.git target_repo
         # 仅保留Markdown文件
         find target_repo -type f ! -name "*.md" -delete
         
-    - name: Detect Changes
-      uses: actions/github-script@v6
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
-        script: |
-          const fs = require('fs');
-          const targetDir = 'target_repo';
-          const crypto = require('crypto');
-          const dataDir = 'data';
-          
-          // 对比文件哈希变化
-          if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
-          const changedFiles = [];
-          fs.readdirSync(targetDir).forEach(file => {
-            const newHash = crypto.createHash('md5').update(fs.readFileSync(`${targetDir}/${file}`)).digest('hex');
-            const oldPath = `${dataDir}/${file}`;
-            
-            if (!fs.existsSync(oldPath) || newHash !== crypto.createHash('md5').update(fs.readFileSync(oldPath)).digest('hex')) {
-              changedFiles.push(file);
-              fs.copyFileSync(`${targetDir}/${file}`, oldPath);
-            }
-          });
-          
-          // 传递变更文件列表
-          core.setOutput('changed_files', JSON.stringify(changedFiles));
-          
-    - name: Generate RSS
-      if: ${{ steps.detect_changes.outputs.changed_files != '[]' }}
+        python-version: '3.10'
+        
+    - name: Detect Changes
+      id: detect_changes
       run: |
-        python scripts/generate_rss.py ${{ steps.detect_changes.outputs.changed_files }}
+        pip install -r requirements.txt
+        python scripts/detect_changes.py
+        
+    - name: Generate RSS
+      if: ${{ steps.detect_changes.outputs.has_changes == 'true' }}
+      run: |
+        python scripts/generate_rss.py "${{ steps.detect_changes.outputs.changed_files }}"
         
     - name: Deploy Feed
       uses: peaceiris/actions-gh-pages@v3

@@ -1,33 +1,52 @@
 import sys
 import json
 import os
+import frontmatter
 from datetime import datetime
 from PyRSS2Gen import RSS2, RSSItem
 
 # 配置参数
 TARGET_REPO_URL = "https://github.com/dw-dengwei/daily-arXiv-ai-enhanced.git" 
 SITE_URL = "https://duyifanict.github.io/markdown-monitor"  # 替换为你的Pages地址
+REPO_RAW_URL = f"{TARGET_REPO_URL}/raw/main/"  # 用于直接访问Markdown
 
-def generate_feed(changed_files):
+def generate_feed(changed_files_json):
+    changed_files = json.loads(changed_files_json)
     items = []
-    files = json.loads(sys.argv[1])
     
-    for file in files:
-        file_path = f"data/{file}"
-        pub_date = datetime.fromtimestamp(os.path.getmtime(file_path))
+    for rel_path in changed_files:
+        file_path = os.path.join("data", rel_path)
         
-        with open(file_path, "r") as f:
+        if not os.path.exists(file_path):
+            continue
+            
+        # 获取文件修改时间
+        mtime = os.path.getmtime(file_path)
+        pub_date = datetime.fromtimestamp(mtime)
+        
+        # 读取文件内容
+        with open(file_path, "r", encoding="utf-8") as f:
             content = f.read()
-            # 可选：截取摘要
-            description = content[:300] + "..." if len(content) > 300 else content
+            
+            # 尝试解析Front Matter
+            try:
+                post = frontmatter.loads(content)
+                title = post.metadata.get("title", os.path.splitext(rel_path)[0])
+                description = post.content[:300] + "..." if len(post.content) > 300 else post.content
+            except:
+                title = os.path.splitext(rel_path)[0]
+                description = content[:300] + "..." if len(content) > 300 else content
         
+        # 创建RSS条目
         items.append(RSSItem(
-            title=f"更新: {file}",
-            link=f"{TARGET_REPO_URL}/blob/main/{file.replace(' ', '%20')}",
+            title=title,
+            link=f"{TARGET_REPO_URL}/blob/main/{rel_path}",
             description=f"<pre>{description}</pre>",
-            pubDate=pub_date
+            pubDate=pub_date,
+            guid=f"{REPO_RAW_URL}{rel_path}"
         ))
     
+    # 生成RSS
     rss = RSS2(
         title="Markdown文件更新追踪",
         link=SITE_URL,
@@ -35,7 +54,14 @@ def generate_feed(changed_files):
         lastBuildDate=datetime.now(),
         items=items
     )
-    rss.write_xml(open("feed.xml", "w", encoding="utf-8"))
+    
+    # 保存RSS文件
+    with open("feed.xml", "w", encoding="utf-8") as f:
+        rss.write_xml(f)
 
 if __name__ == "__main__":
-    generate_feed(sys.argv[1])
+    if len(sys.argv) > 1:
+        generate_feed(sys.argv[1])
+    else:
+        print("Error: No changed files data provided")
+        sys.exit(1)
