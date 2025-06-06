@@ -1,7 +1,7 @@
 name: Markdown Monitor
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时检查一次
+    - cron: '0 */12 * * *'  # 每6小时检查一次
   workflow_dispatch:        # 支持手动触发
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
     - name: Generate RSS
       if: ${{ steps.detect_changes.outputs.has_changes == 'true' }}
       run: |
-        python scripts/generate_rss.py "${{ steps.detect_changes.outputs.changed_files }}"
+        python scripts/generate_rss.py '${{ steps.detect_changes.outputs.changed_files }}'
         
     - name: Deploy Feed
       uses: peaceiris/actions-gh-pages@v3

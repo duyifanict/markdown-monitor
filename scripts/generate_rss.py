@@ -10,8 +10,8 @@ TARGET_REPO_URL = "https://github.com/dw-dengwei/daily-arXiv-ai-enhanced.git"
 SITE_URL = "https://duyifanict.github.io/markdown-monitor"  # 替换为你的Pages地址
 REPO_RAW_URL = f"{TARGET_REPO_URL}/raw/main/"  # 用于直接访问Markdown
 
-def generate_feed(changed_files_json):
-    changed_files = json.loads(changed_files_json)
+def generate_feed(changed_files):
+    print(changed_files)
     items = []
     
     for rel_path in changed_files:
@@ -59,9 +59,18 @@ def generate_feed(changed_files_json):
     with open("feed.xml", "w", encoding="utf-8") as f:
         rss.write_xml(f)
 
+def path_preprocess(path):
+    path = path[1:-1]
+    result = []
+    for item in  path.split(","):
+        item = item.strip()
+        if item.startswith("data"):
+            result.append(item)
+    return result
+
 if __name__ == "__main__":
     if len(sys.argv) > 1:
-        generate_feed(sys.argv[1])
+        generate_feed(path_preprocess(sys.argv[1]))
     else:
         print("Error: No changed files data provided")
         sys.exit(1)
