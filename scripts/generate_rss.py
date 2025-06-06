@@ -70,6 +70,7 @@ def path_preprocess(path):
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
+        print(sys.argv[1])
         generate_feed(path_preprocess(sys.argv[1]))
     else:
         print("Error: No changed files data provided")
