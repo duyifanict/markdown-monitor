@@ -43,6 +43,7 @@ def generate_feed(changed_files):
             link=f"{TARGET_REPO_URL}/blob/main/{rel_path}",
             description=f"<pre>{description}</pre>",
             pubDate=pub_date,
+            author="dw-dengwei",
             guid=f"{REPO_RAW_URL}{rel_path}"
         ))
     
@@ -57,7 +58,7 @@ def generate_feed(changed_files):
     
     # 保存RSS文件
     with open("feed.xml", "w", encoding="utf-8") as f:
-        rss.write_xml(f)
+        rss.write_xml(f,encoding='UTF-8')
 
 def path_preprocess(path):
     path = path[1:-1]
