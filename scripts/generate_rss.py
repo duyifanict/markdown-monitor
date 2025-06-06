@@ -63,7 +63,7 @@ def path_preprocess(path):
     path = path[1:-1]
     result = []
     for item in  path.split(","):
-        item = item.strip()
+        item = item.strip().strip('"')
         if item.startswith("data"):
             result.append(item)
     return result
