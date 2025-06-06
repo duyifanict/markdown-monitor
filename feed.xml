@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
     <channel>
-        <title>Markdown文件更新追踪</title>
-        <link>https://github.com/duyifanict/markdown-monitor</link>
-        <description>自动监控的Markdown变更订阅</description>
-        <lastBuildDate>Fri, 06 Jun 2025 08:48:55 GMT</lastBuildDate>
-        <generator>PyRSS2Gen-1.1.0</generator>
-        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <title><![CDATA[财经频道]]></title>
+        <image>
+            <title><![CDATA[财经频道]]></title>
+            <link>http://finance.people.cn</link>
+            <url>http://www.people.cn/img/2014peoplelogo/rmw_logo.gif</url>
+        </image>
+        <description><![CDATA[财经新闻]]></description>
+        <link>http://finance.people.cn</link>
+        <language>zh-cn</language>
+        <generator>www.people.cn</generator>
+        <copyright><![CDATA[Copyright 1997-2025 by www.people.com.cn. all rights reserved]]></copyright>
+        <pubDate>2025-06-05 20:50:18</pubDate>
         <item>
             <title>data/2025-03-28</title>
             <link>https://github.com/dw-dengwei/daily-arXiv-ai-enhanced/blob/main/data/2025-03-28.md</link>
