@@ -32,16 +32,16 @@ def generate_feed(changed_files):
             try:
                 post = frontmatter.loads(content)
                 title = post.metadata.get("title", os.path.splitext(rel_path)[0])
-                description = "paper dalily"
+                description = f'paper dalily <a href="{TARGET_REPO_URL}/blob/main/{rel_path}" target="_blank">查看全文</a>'
             except:
                 title = os.path.splitext(rel_path)[0]
-                description = "paper dalily"
+                description = f'paper dalily <a href="{TARGET_REPO_URL}/blob/main/{rel_path}" target="_blank">查看全文</a>'
         
         # 创建RSS条目
         items.append(RSSItem(
             title=title,
             link=f"{TARGET_REPO_URL}/blob/main/{rel_path}",
-            description=f"<pre>{description}</pre>",
+            description=f"{description}",
             pubDate=pub_date,
             author="dw-dengwei",
             guid=f"{REPO_RAW_URL}{rel_path}"
