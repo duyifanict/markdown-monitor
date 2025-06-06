@@ -20,9 +20,9 @@ def generate_feed(changed_files):
         if not os.path.exists(file_path):
             continue
             
-        # 获取文件修改时间
-        mtime = os.path.getmtime(file_path)
-        pub_date = datetime.fromtimestamp(mtime)
+        # rel_path是类似 "data/2023-10-01.md" 的格式，pub_date需要从rel_path中获取
+        pub_date_str = rel_path.split("/")[1]
+        pub_date = datetime.strptime(pub_date_str, "%Y-%m-%d.md")
         
         # 读取文件内容
         with open(file_path, "r", encoding="utf-8") as f:
