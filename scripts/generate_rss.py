@@ -32,10 +32,10 @@ def generate_feed(changed_files):
             try:
                 post = frontmatter.loads(content)
                 title = post.metadata.get("title", os.path.splitext(rel_path)[0])
-                description = post.content[:300] + "..." if len(post.content) > 300 else post.content
+                description = "paper dalily"
             except:
                 title = os.path.splitext(rel_path)[0]
-                description = content[:300] + "..." if len(content) > 300 else content
+                description = "paper dalily"
         
         # 创建RSS条目
         items.append(RSSItem(
