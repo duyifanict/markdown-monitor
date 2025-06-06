@@ -6,7 +6,7 @@ from datetime import datetime
 from PyRSS2Gen import RSS2, RSSItem
 
 # 配置参数
-TARGET_REPO_URL = "https://raw.githubusercontent.com/dw-dengwei/daily-arXiv-ai-enhanced" 
+TARGET_REPO_URL = "https://github.com/dw-dengwei/daily-arXiv-ai-enhanced" 
 SITE_URL = "https://github.com/duyifanict/markdown-monitor"  # 替换为你的Pages地址
 REPO_RAW_URL = f"{TARGET_REPO_URL}/raw/main/"  # 用于直接访问Markdown
 
@@ -40,7 +40,7 @@ def generate_feed(changed_files):
         # 创建RSS条目
         items.append(RSSItem(
             title=title,
-            link=f"{TARGET_REPO_URL}/refs/heads/main/{rel_path}",
+            link=f"{TARGET_REPO_URL}/blob/main/{rel_path}",
             description=f"<pre>{description}</pre>",
             pubDate=pub_date,
             guid=f"{REPO_RAW_URL}{rel_path}"
