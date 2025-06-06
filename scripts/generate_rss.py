@@ -41,7 +41,7 @@ def generate_feed(changed_files):
         items.append(RSSItem(
             title=title,
             link=f"{TARGET_REPO_URL}/blob/main/{rel_path}",
-            description=f"<pre>{description}</pre>",
+            description=f"{description}",
             pubDate=pub_date,
             author="dw-dengwei",
             guid=f"{REPO_RAW_URL}{rel_path}"
