@@ -53,6 +53,10 @@ def generate_feed(changed_files):
 
         # 对items进行排序，按照pubDate降序排列
         items.sort(key=lambda x: x.pubDate, reverse=True)
+
+        # 取前七条
+        if len(items) > 7:
+            items = items[:7]
     
     # 生成RSS
     rss = RSS2(
