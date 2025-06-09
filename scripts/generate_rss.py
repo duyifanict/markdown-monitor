@@ -23,6 +23,10 @@ def generate_feed(changed_files):
         # rel_path是类似 "data/2023-10-01.md" 的格式，pub_date需要从rel_path中获取
         pub_date_str = rel_path.split("/")[1]
         pub_date = datetime.strptime(pub_date_str, "%Y-%m-%d.md")
+
+        # 如果pub_data不在这个月，则跳过此项
+        if pub_date.month != datetime.now().month or pub_date.year != datetime.now().year:
+            continue
         
         # 读取文件内容
         with open(file_path, "r", encoding="utf-8") as f:
@@ -46,6 +50,9 @@ def generate_feed(changed_files):
             author="dw-dengwei",
             guid=f"{REPO_RAW_URL}{rel_path}"
         ))
+
+        # 对items进行排序，按照pubDate降序排列
+        items.sort(key=lambda x: x.pubDate, reverse=True)
     
     # 生成RSS
     rss = RSS2(
